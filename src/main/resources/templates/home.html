@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1" />
+<title>Insert title here</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" />
+<script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js">
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+<script src="ArcsDesign.js" type="text/javascript"></script>
+<script src="drawCurve.js" type="text/javascript"></script>
+<style type="text/css">
+table{
+    border-top: 1px solid #000000;
+    border-left: 1px solid #000000;
+    border-collapse: collapse; /*设置单元格的边框合并为1*/
+}
+td{
+    border-bottom: 1px solid #000000;
+    border-right: 1px solid #000000;
+}
+*｛
+	padding:0;
+｝
+.font{
+	font-size:30px
+}
+.table {
+table-layout:fixed;
+}
+.table  td {
+overflow: hidden;
+white-space: nowrap;
+text-overflow: ellipsis;
+}
+</style>
+</head>
+<body>
+	<div class="container">
+		<div class="col-sm-7" style="margin: 20px 0px 20px 0px">
+			<button id="getALlBooks" type="button" class="btn btn-primary">Get
+				All Books</button>
+		</div>
+
+		<div id = 'canvasdiv'></div>
+		<div id='table-content'>
+			<table id="content"   border="1" cellpadding="0" cellspacing="0" style="table-layout:fixed"></table>
+		</div>
+	</div>
+	<script type="text/javascript">
+	var hb;
+	var tt;
+	var wordStr="<tr>";
+	var tagStr ='<tr>';
+	var words = new Array();          // 词数组
+	var tags = new Array();		      // 标签数组
+	var wordsSize = new Array();      // 词大小数组
+	var widthArr = new Array();	      // td宽度数组
+	var size;						  // 词的个数
+	var relationSize;                 // 关系个数
+	var tdBeginX = new Array();       // 每个词的左起点X
+	var arcsArr = new Array();        // 关系二维数组
+	var arcs = new Array();
+
+	// 生成table
+	function createTable() {
+		var x=0;
+	 	for ( var i = 0; i <size; i++){
+	    	word = words[i];
+	    	tag = tags[i];
+	    	wordSize = wordsSize[i];
+	    	width = 30*wordSize;
+	    	widthArr[i] = width;
+	    	tdBeginX[i] = x;
+	    	x = x + width;
+	    	wordStr += '<td  align="center" width= ' + width + '  >' + word + '</td>';
+	    	tagStr  += '<td  align="center" width= ' + width + '  >' + tag + '</td>';
+		}
+	 	wordStr += '</tr>';
+	 	tagStr  += '</tr>';	
+	 	return wordStr + tagStr;
+	}
+	
+
+	// 初始化关系二维数组
+	function initArcs(size) {
+		var temp = new Array(size);
+		for (var i = 0; i < size; i++) {
+			temp[i] = new Array(size);
+			for (var j = 0; j < size; j++) {
+				temp[i][j] = 0;
+			}
+		}
+		return temp;
+	}
+
+	// 切分原始语料
+	function getWordsAndTags() {	
+		$.ajax({
+			type : "GET",
+			url : "getBooks",
+			success : function(result) {
+				if (result.status == "success") {
+					words = result.data.words;
+					tags = result.data.tags;
+					wordsSize = result.data.wordsSize;
+					size = result.data.words.length;
+					arcsArr = initArcs(size);
+					// 生成表格
+					var x = createTable();
+					$("#content").append(x)
+					relationSize = result.data.start.length;
+					for (var i = 0; i < relationSize; i++) {
+						var temp;
+						var start = result.data.start[i];
+						var end = result.data.end[i];
+						var relation = result.data.relation[i];
+						arcsArr[start][end] = 1;
+						console.log("width : " + widthArr[start])
+						temp = new Arcs(start, end, tdBeginX[start], ycoordinate, tdBeginX[end], (tdBeginX[start]+ tdBeginX[end])/2, end-start, relation,widthArr[start]);
+						arcs.push(temp);
+					}
+					drawcurve();
+
+				} else {
+					console.log("Fail: ", result);
+				}
+			},
+			error : function(e) {
+				console.log("ERROR: ", e);
+			}
+		});
+	}
+
+	$(document).ready(function(){
+		tt = document.getElementById("content");//开始画弧相关
+		var canvas_str = '<canvas id="cc" class="canvas" width= ' + canvasWidth + ' height=' + canvasHeight+' style="border:0px solid #ccc;" >	Your browser does not support the HTML5 canvas.</canvas>';
+		document.getElementById('canvasdiv').innerHTML = canvas_str;
+		var c=document.getElementById("cc");
+		hb=c.getContext("2d");
+		hb.clearRect(0,0, canvasWidth, canvasHeight);//与cover大小一致
+		// GET REQUEST
+		$("#getALlBooks").click(function(event) {
+			event.preventDefault();
+			getWordsAndTags();
+		});
+	});
+	
+
+
+
+	</script>
+</body>
+</html>
