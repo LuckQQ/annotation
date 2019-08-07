@@ -4,9 +4,9 @@ var CellCont = CellWidth -2;
 var ArcStartPx = CellWidth/2 -4;
 var maxwords = 150;//要调整该值，要同时调整canvas属性width和height，还有ycoordinate的值。
 var xcoordinate =new Array();
-var ycoordinate = 496;
+var ycoordinate = 296;
 var canvasWidth = 2000;
-var canvasHeight= 500;
+var canvasHeight= 300;
 
 
 /*****************************history page set up global variable*/

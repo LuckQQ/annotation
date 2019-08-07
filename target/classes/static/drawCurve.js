@@ -11,10 +11,11 @@ function drawcurve(){
 			hb.beginPath();
 			
 			if(arcs[i].start < arcs[i].end){           // to right
-				console.log(arcs[i]);
-				var begin = arcs[i].x1+arcs[i].width/2-10;
+				console.log("start :" + arcs[i].start + "   end:" + arcs[i].end);
+				var begin = arcs[i].x1+arcs[i].width/2+7;
+				var end = arcs[i].x2 + arcs[i].width/2 - 7;
 				hb.moveTo(begin, arcs[i].y1);
-				hb.bezierCurveTo(begin, arcs[i].y, arcs[i].xx, arcs[i].yy, arcs[i].x2+10, arcs[i].y2);
+				hb.bezierCurveTo(begin, arcs[i].y, end, arcs[i].yy, end, arcs[i].y2);
 				console.log("开始点： （" + (arcs[i].x1+arcs[i].width/2-10) + "," +(arcs[i].y1 + 3) + ")")
 				console.log("控制点一： （" + (arcs[i].x1+arcs[i].width/2-10) + "," +arcs[i].y + ")")
 				console.log("控制点二： （" + (arcs[i].xx) + "," +arcs[i].yy + ")")
@@ -37,7 +38,7 @@ function drawcurve(){
 				hb.closePath();
 				hb.beginPath();
 				// 画箭头
-				hb.translate(arcs[i].x2+10, arcs[i].y2);
+				hb.translate(end, arcs[i].y2);
 				
 				hb.rotate(1.5);// left->right
 				
@@ -49,7 +50,7 @@ function drawcurve(){
 				hb.restore();   
 				var vancas = document.getElementById('cc').getContext("2d");// 原点归为
 				hb = vancas;
-				arcs[i].xtxt = (arcs[i].x + 10 +arcs[i].x2)/2;// 更改弧线中心，及tag所在位置
+				arcs[i].xtxt = (begin+end)/2;// 更改弧线中心，及tag所在位置
 				hb.translate(arcs[i].xtxt-10, arcs[i].ytxt-7);
 				hb.fillStyle = "#E1E1DF";
 				hb.fillRect(0, 0, 20, 10);
