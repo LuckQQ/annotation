@@ -6,7 +6,11 @@
 	<title>语义依存图标注平台</title>
 	<link rel="shortcut icon" href="images/logo.ico" />
 	<link href="style.css" rel="stylesheet" media="all" />
+	<link href="css/buttons.css" rel="stylesheet" media="all" />
 	<link href="" rel="stylesheet" title="style" media="all" />
+    <link rel="stylesheet" href="css/contextmenu.css" />
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+	
 	<script type="text/javascript" src="js/jquery-1.3.2.js"></script>
 	<script type="text/javascript" src="js/superfish.js"></script>
 	<script type="text/javascript" src="js/jquery-ui-1.7.2.js"></script>
@@ -15,6 +19,9 @@
 	<script type="text/javascript" src="js/tablesorter-pager.js"></script>
 	<script type="text/javascript" src="js/cookie.js"></script>
 	<script type="text/javascript" src="js/custom.js"></script>
+    <script type="text/javascript" src="js/contextmenu.js"></script>
+	<script type="text/javascript" src="js/cmen.js"></script>
+	<script type="text/javascript" src="js/segmentMen.js"></script>
     <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>-->
     <!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>-->
     <!--<script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>-->
@@ -83,35 +90,35 @@
 				<!--<a href="#" id="dialog_link" class="btn ui-state-default ui-corner-all"><span class="ui-icon ui-icon-newwin"></span>打开对话框</a>-->
 				<!--<a href="#" id="login_dialog" class="btn ui-state-default ui-corner-all"><span class="ui-icon ui-icon-image"></span>登录框</a>-->
 			</div> <!-- 登录框-->
-			<div id="login" title="登录">
-				<form action="#" method="post" enctype="multipart/form-data" class="forms" name="form" >
-					<ul>
-						<li>
-							<label for="email" class="desc">
-								邮箱:
-							</label>
-							<div>
-								<input type="text" tabindex="1" maxlength="255" value="" class="field text full" name="email" id="email" />
-							</div>
-						</li>
-						<li>
-							<label for="password" class="desc">
-								密码:
-							</label>
-							<div>
-								<input type="password" tabindex="1" maxlength="255" value="" class="field text full" name="password" id="password" />
-							</div>
-						</li>
-					</ul>
-				</form>
-			</div>
-			<div id="dialog" title="提示">
-				<p>nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-				<div class="response-msg error ui-corner-all">
-					<span>Error </span>
-					标注不完整
-				</div>
-			</div>
+			<!--<div id="login" title="登录">-->
+				<!--<form action="#" method="post" enctype="multipart/form-data" class="forms" name="form" >-->
+					<!--<ul>-->
+						<!--<li>-->
+							<!--<label for="email" class="desc">-->
+								<!--邮箱:-->
+							<!--</label>-->
+							<!--<div>-->
+								<!--<input type="text" tabindex="1" maxlength="255" value="" class="field text full" name="email" id="email" />-->
+							<!--</div>-->
+						<!--</li>-->
+						<!--<li>-->
+							<!--<label for="password" class="desc">-->
+								<!--密码:-->
+							<!--</label>-->
+							<!--<div>-->
+								<!--<input type="password" tabindex="1" maxlength="255" value="" class="field text full" name="password" id="password" />-->
+							<!--</div>-->
+						<!--</li>-->
+					<!--</ul>-->
+				<!--</form>-->
+			<!--</div>-->
+			<!--<div id="dialog" title="提示">-->
+				<!--<p>nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>-->
+				<!--<div class="response-msg error ui-corner-all">-->
+					<!--<span>Error </span>-->
+					<!--标注不完整-->
+				<!--</div>-->
+			<!--</div>-->
 		</div>
 		<ul id="navigation" class="sf-navbar">
 			<li>
@@ -130,25 +137,14 @@
 			</li>
 		</ul>
 	</div>
-
 	<div id="page-wrapper">
 		<div id="main-wrapper">
 			<div id="main-content">
 				<div class="page-title ui-widget-content ui-corner-all">
-					<h1>控制台快捷按钮</h1>
-					<div class="other">
-						<div class="float-left">你可以放些按钮或文字到这里面.</div>
-						<div class="button float-right">
-							<a href="#"  class="btn ui-state-default"><span class="ui-icon ui-icon-circle-plus"></span>列子</a>
-						</div>
-						<div class="clearfix"></div>
-					</div>
-				</div>
-				<div class="page-title ui-widget-content ui-corner-all">
-					<h1>管理员选项</h1>
+					<h1>这是第100句，已标80句，跳过20句</h1>
 					<div class="other">
 
-						<div class="container">
+						<div class="container"  id="cmenu" >   <!-- 画布区域-->
 							<div>
 								<button id="getALlBooks" type="button" >Get All Books</button>
 							</div>
@@ -158,255 +154,24 @@
 								<table id="content"   border="1" cellpadding="0" cellspacing="0" style="table-layout:fixed"></table>
 							</div>
 						</div>
+						<br><br>
+						<div class="container">
+							<div class="clearfix"></div>
+							<button class="button button_shadow actions" data-button="red" name="save" value="save">保存</button>
+							<button class="button button_shadow actions" data-button="green" name="reset" value="reset">重置</button>
+							<button class="button button_shadow actions" data-button="blue" name="change" value="change"  id="change">修改分词</button>
+							<button class="button button_shadow actions" data-button="purple" name="previous" value="previous">上一句</button>
+							<button class="button button_shadow actions">BUTTON</button>
+
+							<div class="clearfix"></div>
+						</div>
 
 						<span id="root">test</span>
 
 						<div class="clearfix"></div>
 					</div>
 				</div>
-				<div class="title title-spacing">
-					<h2>控制台网格布局实例</h2>
-					I've mode some examples using accordions, buttons, news, tabs and forms. For more grid examples, visit <a href="#" title="More layout examples">this page</a>.
-				</div>
-				<div class="three-column">
-					<div class="column">
-						<div class="portlet form-bg">
-							<div class="portlet-header">表单实例</div>
-							<div class="portlet-content">
-								<form action="#" method="post" enctype="multipart/form-data" class="forms" name="form" >
-									<ul>
-										<li>
-											<label class="desc">
-												邮箱:
-											</label>
-											<div>
-
-												<input type="text" tabindex="1" maxlength="255" value="" class="field text full" name="" />
-												<span class="red">提示的信息 ...</span>
-											</div>
-										</li>
-										<li>
-											<label class="desc">
-												密码:
-											</label>
-											<div>
-
-												<input type="password" tabindex="1" maxlength="255" value="" class="field text full" name="" />
-												<label>These inputs have class="full", which means that they have 100% width.</label>
-											</div>
-										</li>
-										<li class="buttons">
-											<button type="submit" value="Submit" class="ui-state-default ui-corner-all" id="saveForm">登录</button>
-										</li>
-									</ul>
-
-								</form>
-								<div class="linetop clearfix"></div>
-								<p>Added class="form-bg" to obtain the light gray background.</p>
-							</div>
-						</div>
-						<div class="portlet">
-							<div class="portlet-header">一些其他 ...</div>
-							<div class="portlet-content">
-
-								<p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
-								
-								<p> Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>
-								
-								<p> Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.</p>
-								
-								<p> Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex </p>
-							</div>
-
-						</div>
-					</div>
-					
-					<div class="column">
-						<div class="portlet">
-							<div class="portlet-header">选项卡,消息,表格</div>
-							<div class="portlet-content">
-								<div id="tabs">
-									<ul>
-
-										<li><a href="#tabs-1">选项卡1</a></li>
-										<li><a href="#tabs-2">选项卡2</a></li>
-										<li><a href="#tabs-3">选项卡3</a></li>
-									</ul>
-									<div id="tabs-1">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</div>
-									<div id="tabs-2">Phasellus mattis tincidunt nibh. Cras orci urna, blandit id, pretium vel, aliquet ornare, felis. Maecenas scelerisque sem non nisl. Fusce sed lorem in enim dictum bibendum.</div>
-
-									<div id="tabs-3">Nam dui erat, auctor a, dignissim quis, sollicitudin eu, felis. Pellentesque nisi urna, interdum eget, sagittis et, consequat vestibulum, lacus. Mauris porttitor ullamcorper augue.</div>
-								</div>
-								<div class="other-box gray-box float-left width50 ui-corner-all">
-									<div class="cont ui-corner-all">
-										<h3>Grey Box</h3>
-										<p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
-									</div>
-
-								</div>
-								<div class="other-box yellow-box float-right width50 ui-corner-all">
-									<div class="cont ui-corner-all">
-										<h3>Notice Box</h3>
-										<p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
-									</div>
-								</div>
-								<div class="clearfix"></div>
-
-								<i class="note">* Table example below: </i>
-								<div class="hastable">
-									<table cellspacing="0">
-										<thead>
-											<tr>
-												<td><input type="checkbox" class="checkbox" value=""/></td>
-												<td>Name</td>
-												<td>Email</td>
-
-												<td>Options</td>
-											</tr>
-										</thead>
-										<tbody>
-											<tr>  	  	
-												<td>
-													<input type="checkbox" class="checkbox" value=""/>
-												</td>
-												<td>
-
-													John 
-												</td>
-												<td>
-													Lorem .
-												</td>
-												<td>
-													Options
-												</td>
-											</tr>
-											<tr class="alt">  	  	
-												<td>
-
-													<input type="checkbox" class="checkbox" value=""/>
-												</td>
-												<td>
-													John 
-												</td>
-												<td>
-													Lorem .
-												</td>
-												<td>
-													Options
-												</td>
-
-											</tr>
-											<tr>  	  	
-												<td>
-													<input type="checkbox" class="checkbox" value=""/>
-												</td>
-												<td>
-													John 
-												</td>
-												<td>
-													Lorem .
-												</td>
-
-												<td>
-													Options
-												</td>
-											</tr>
-										</tbody>
-									</table>
-								</div>
-							</div>
-						</div>
-
-					</div>
-					
-					<div class="column">
-						<div class="portlet">
-							<div class="portlet-header">按钮</div>
-							<div class="portlet-content">
-								<p>JsAdmin contains a total of more than 180 icons. I only added a few for demonstration. In the theme package you will find a page that contains all buttons you have at your disposal (buttons.html)</p>
-								<ul id="icons" class="ui-widget ui-helper-clearfix">
-									<li class="ui-state-default ui-corner-all" title=".ui-icon-star"><span class="ui-icon ui-icon-star"></span></li>
-									<li class="ui-state-default ui-corner-all" title=".ui-icon-link"><span class="ui-icon ui-icon-link"></span></li>
-									<li class="ui-state-default ui-corner-all" title=".ui-icon-cancel"><span class="ui-icon ui-icon-cancel"></span></li>
-									<li class="ui-state-default ui-corner-all" title=".ui-icon-plus"><span class="ui-icon ui-icon-plus"></span></li>
-									<li class="ui-state-default ui-corner-all" title=".ui-icon-plusthick"><span class="ui-icon ui-icon-plusthick"></span></li>
-									<li class="ui-state-default ui-corner-all" title=".ui-icon-minus"><span class="ui-icon ui-icon-minus"></span></li>
-									<li class="ui-state-default ui-corner-all" title=".ui-icon-minusthick"><span class="ui-icon ui-icon-minusthick"></span></li>
-									<li class="ui-state-default ui-corner-all" title=".ui-icon-close"><span class="ui-icon ui-icon-close"></span></li>
-
-									<li class="ui-state-default ui-corner-all" title=".ui-icon-script"><span class="ui-icon ui-icon-script"></span></li>
-									<li class="ui-state-default ui-corner-all" title=".ui-icon-alert"><span class="ui-icon ui-icon-alert"></span></li>
-
-								</ul>
-								<div class="clearfix"></div>
-								<p>You can transform those icons into links.See the examples below.</p>
-								
-								<div class="clearfix"></div>
-									<a href="#" class="btn ui-state-default ui-corner-all">
-										<span class="ui-icon ui-icon-grip-dotted-horizontal"></span>
-										Button 1
-									</a>
-									<a href="#" class="btn ui-state-default ui-corner-all">
-
-										<span class="ui-icon ui-icon ui-icon-gripsmall-diagonal-se"></span>
-										Button 2
-									</a>
-									<a href="#" class="btn ui-state-default ui-corner-all">
-										<span class="ui-icon ui-icon-grip-solid-horizontal"></span>
-										Button 3
-									</a>
-									<a href="#" class="btn ui-state-default ui-corner-all">
-										<span class="ui-icon ui-icon-grip-solid-vertical"></span>
-										Button 3
-									</a>
-
-								<div class="clearfix"></div>
-								<p class="title-spacing linetop">Here is a pagination example:</p>
-								<ul class="pagination">
-									<li class="previous-off">&laquo;Previous</li>
-									<li class="active">1</li>
-									<li><a href="#">2</a></li>
-									<li><a href="#">3</a></li>
-									<li><a href="#">4</a></li>
-									<li class="next"><a href="#">Next &raquo;</a></li>
-								</ul>
-								<div class="clearfix"></div>
-							</div>
-						</div>
-						<div class="portlet">
-							<div class="portlet-header">提示信息</div>
-							<div class="portlet-content">
-								<p>JsAdmin contains a total of more than 180 icons. I only added a few for demonstration. In the theme package you will find a page that contains all buttons you have at your disposal (buttons.html)</p>
-								<div class="title">
-									<h3>Response messages</h3>
-									Below you will find <b>JsAdmin</b> response messages.
-								</div>
-								<div class="response-msg error ui-corner-all">
-									<span>Error message</span>
-									Lorem ipsum dolor sit amet, consectetuer adipiscing elit
-								</div>
-								<div class="response-msg notice ui-corner-all">
-									<span>Notice message</span>
-									Lorem ipsum dolor sit amet, consectetuer adipiscing elit
-								</div>
-							
-								<div class="response-msg inf ui-corner-all">
-									<span>Information message</span>
-									Lorem ipsum dolor sit amet, consectetuer adipiscing elit
-								</div>
-							
-								<div class="response-msg success ui-corner-all">
-									<span>Success message</span>
-									Lorem ipsum dolor sit amet, consectetuer adipiscing elit
-								</div>
-								<div class="clearfix"></div>
-							</div>
-						</div>
-					</div>
-				</div>
-
 			</div>
-			<div class="clearfix"></div>
 		</div>
 	</div>
 	<div class="clearfix"></div>
@@ -435,7 +200,27 @@
     var arcsArr = new Array();        // 关系二维数组
     var arcs = new Array();
 
-    // 生成table
+    var chooseIndex;            // 选中弧的index
+    var tagMenu;                 // 右键修改标签菜单
+	var segcheck = false;        // 分次状态
+	var td;
+ 
+ 	var segMenu;
+
+	/* 修改标签 */
+	function changeTag(tag){
+		if(!-[1,]){
+			//alert('是IE！')
+			tag = tag.split(' ')[0];
+		}else{
+			tag = tag.split("&")[0];
+		}
+		arcs[chooseIndex].text = tag;
+		arcs[chooseIndex].choose = false;
+		drawcurve();
+	}
+    
+    /* 生成表格 */
     function createTable() {
         var x=0;
         for ( var i = 0; i <size; i++){
@@ -444,7 +229,7 @@
             wordSize = wordsSize[i];
             width = 20*wordSize+20;
             tdBeginX[i] = x;
-            console.log("tdBeginX[i]: "+tdBeginX[i]);
+            //console.log("tdBeginX[i]: "+tdBeginX[i]);
 
             if(i===0){
                 String.prototype.visualLength = function()
@@ -456,7 +241,7 @@
                 var text = "Root";
                 width = text.visualLength();
                 width+=20;
-                console.log("len : " +width);
+                //console.log("len : " +width);
                 wordStr += '<td class="word" align="center" width= ' + width + '  >' + word + '</td>';
                 tagStr += '<td class="tag" align="center" width= ' + width + '  >' + tag + '</td>';
             }
@@ -465,7 +250,7 @@
                 tagStr += '<td class="tag"  align="center" width= ' + width + '  >' + tag + '</td>';
             }
             widthArr[i] = width+20+1;
-            console.log("widthArr[i]: "+i+"  "+widthArr[i]);
+            //console.log("widthArr[i]: "+i+"  "+widthArr[i]);
             x += widthArr[i];
         }
         wordStr += '</tr>';
@@ -473,8 +258,7 @@
         return wordStr + tagStr;
     }
 
-
-    // 初始化关系二维数组
+    /* 初始化关系二维数组 */
     function initArcs(size) {
         var temp = new Array(size);
         for (var i = 0; i < size; i++) {
@@ -486,14 +270,14 @@
         return temp;
     }
 
-    // 切分原始语料
+    /* 切分原始语料 */
     function getWordsAndTags() {
         $.ajax({
             type : "GET",
             url : "getBooks",
             success : function(result) {
                 result=eval("("+result+")");
-                console.log(result);
+                //console.log(result);
                 if (result.status === "success") {
                     words = result.data.words;
                     tags = result.data.tags;
@@ -525,19 +309,68 @@
             }
         });
     }
-
+    
     $(document).ready(function(){
+ 		tagMenu = new ContextMenu(cmen);
+ 		segMenu = new ContextMenu(segmentMenu)
+
         tt = document.getElementById("content");//开始画弧相关
         var canvas_str = '<canvas id="cc" class="canvas" width= ' + canvasWidth + ' height=' + canvasHeight+' style="border:0px solid #ccc;" >	Your browser does not support the HTML5 canvas.</canvas>';
         document.getElementById('canvasdiv').innerHTML = canvas_str;
         var c=document.getElementById("cc");
         hb=c.getContext("2d");
         hb.clearRect(0,0, canvasWidth, canvasHeight);//与cover大小一致
-        // GET REQUEST
-        $("#getALlBooks").click(function(event) {
-            event.preventDefault();
-            getWordsAndTags();
-        });
+        getWordsAndTags();
+        
+        <!--右键弹出修改词性菜单-->
+		document.getElementById('cmenu').addEventListener("contextmenu", function(e){
+			td = event.srcElement;
+			line = td.parentElement.rowIndex;
+			col = td.cellIndex;    
+			var cell_len = tt.rows.item(0).cells.length; 
+			
+			var x = event.pageX - $("#cc").offset().left;
+			var y = event.pageY - $("#cc").offset().top;
+			
+			for (var i=0; i<arcs.length; i++)
+			{
+				var tx = arcs[i].xtxt;
+				var ty = arcs[i].ytxt;      // 曲线中点坐标
+				
+				if((x-13)<=tx && (y-9)<=ty && (y+10) >=ty &&(x+13)>=tx ) {
+					chooseIndex = i;
+					if (segcheck == false){
+						arcs[i].choose = true;
+						drawcurve();
+						menu.display(event);
+						break;
+					}
+				}
+			}
+		}); 
+		
+	    <!-- 右键弹出修改分词菜单-->
+
+	    $('#change').click(function(){
+	    	console.log("!!!!!!!!");
+	    	if (segcheck == true) {
+	    		return;
+	    	}
+	    	segcheck = true;
+			wordlist="<tr>";
+			taglist ='<tr>';
+			var cell_len = tt.rows.item(0).cells.length;
+			
+			for (var i = 0; i < cell_len; i++){
+				var w = tt.rows.item(0).cells.item(i).innerText;
+				var tag = tt.rows.item(1).cells.item(i).innerText;
+				wordlist += '<td width= ' + widthArr[i] + '  ><textarea id="cell' + i + '" value="' + w + '" style="width:100%;height:100%;font-size:17px;padding:0">' + w + '</textarea></td>';
+			    taglist  += '<td width= ' + widthArr[i] + '  "style="font-size:17px">' + tag + '</td>';
+			}
+			wordlist += '</tr>';
+			taglist  += '</tr>';
+			tt.innerHTML = wordlist + taglist;
+	    }) 
     });
 </script>
 </html>

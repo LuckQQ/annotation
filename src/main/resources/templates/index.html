@@ -8,6 +8,9 @@
 	<link href="style.css" rel="stylesheet" media="all" />
 	<link href="css/buttons.css" rel="stylesheet" media="all" />
 	<link href="" rel="stylesheet" title="style" media="all" />
+    <link rel="stylesheet" href="css/contextmenu.css" />
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+	
 	<script type="text/javascript" src="js/jquery-1.3.2.js"></script>
 	<script type="text/javascript" src="js/superfish.js"></script>
 	<script type="text/javascript" src="js/jquery-ui-1.7.2.js"></script>
@@ -16,6 +19,9 @@
 	<script type="text/javascript" src="js/tablesorter-pager.js"></script>
 	<script type="text/javascript" src="js/cookie.js"></script>
 	<script type="text/javascript" src="js/custom.js"></script>
+    <script type="text/javascript" src="js/contextmenu.js"></script>
+	<script type="text/javascript" src="js/cmen.js"></script>
+	<script type="text/javascript" src="js/segmentMen.js"></script>
     <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>-->
     <!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>-->
     <!--<script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>-->
@@ -138,7 +144,7 @@
 					<h1>这是第100句，已标80句，跳过20句</h1>
 					<div class="other">
 
-						<div class="container">   <!-- 画布区域-->
+						<div class="container"  id="cmenu" >   <!-- 画布区域-->
 							<div>
 								<button id="getALlBooks" type="button" >Get All Books</button>
 							</div>
@@ -153,7 +159,7 @@
 							<div class="clearfix"></div>
 							<button class="button button_shadow actions" data-button="red" name="save" value="save">保存</button>
 							<button class="button button_shadow actions" data-button="green" name="reset" value="reset">重置</button>
-							<button class="button button_shadow actions" data-button="blue" name="change" value="change">修改分词</button>
+							<button class="button button_shadow actions" data-button="blue" name="change" value="change"  id="change">修改分词</button>
 							<button class="button button_shadow actions" data-button="purple" name="previous" value="previous">上一句</button>
 							<button class="button button_shadow actions">BUTTON</button>
 
@@ -194,7 +200,27 @@
     var arcsArr = new Array();        // 关系二维数组
     var arcs = new Array();
 
-    // 生成table
+    var chooseIndex;            // 选中弧的index
+    var tagMenu;                 // 右键修改标签菜单
+	var segcheck = false;        // 分次状态
+	var td;
+ 
+ 	var segMenu;
+
+	/* 修改标签 */
+	function changeTag(tag){
+		if(!-[1,]){
+			//alert('是IE！')
+			tag = tag.split(' ')[0];
+		}else{
+			tag = tag.split("&")[0];
+		}
+		arcs[chooseIndex].text = tag;
+		arcs[chooseIndex].choose = false;
+		drawcurve();
+	}
+    
+    /* 生成表格 */
     function createTable() {
         var x=0;
         for ( var i = 0; i <size; i++){
@@ -203,7 +229,7 @@
             wordSize = wordsSize[i];
             width = 20*wordSize+20;
             tdBeginX[i] = x;
-            console.log("tdBeginX[i]: "+tdBeginX[i]);
+            //console.log("tdBeginX[i]: "+tdBeginX[i]);
 
             if(i===0){
                 String.prototype.visualLength = function()
@@ -215,7 +241,7 @@
                 var text = "Root";
                 width = text.visualLength();
                 width+=20;
-                console.log("len : " +width);
+                //console.log("len : " +width);
                 wordStr += '<td class="word" align="center" width= ' + width + '  >' + word + '</td>';
                 tagStr += '<td class="tag" align="center" width= ' + width + '  >' + tag + '</td>';
             }
@@ -224,7 +250,7 @@
                 tagStr += '<td class="tag"  align="center" width= ' + width + '  >' + tag + '</td>';
             }
             widthArr[i] = width+20+1;
-            console.log("widthArr[i]: "+i+"  "+widthArr[i]);
+            //console.log("widthArr[i]: "+i+"  "+widthArr[i]);
             x += widthArr[i];
         }
         wordStr += '</tr>';
@@ -232,8 +258,7 @@
         return wordStr + tagStr;
     }
 
-
-    // 初始化关系二维数组
+    /* 初始化关系二维数组 */
     function initArcs(size) {
         var temp = new Array(size);
         for (var i = 0; i < size; i++) {
@@ -245,14 +270,14 @@
         return temp;
     }
 
-    // 切分原始语料
+    /* 切分原始语料 */
     function getWordsAndTags() {
         $.ajax({
             type : "GET",
             url : "getBooks",
             success : function(result) {
                 result=eval("("+result+")");
-                console.log(result);
+                //console.log(result);
                 if (result.status === "success") {
                     words = result.data.words;
                     tags = result.data.tags;
@@ -284,28 +309,68 @@
             }
         });
     }
-
+    
     $(document).ready(function(){
+ 		tagMenu = new ContextMenu(cmen);
+ 		segMenu = new ContextMenu(segmentMenu)
+
         tt = document.getElementById("content");//开始画弧相关
         var canvas_str = '<canvas id="cc" class="canvas" width= ' + canvasWidth + ' height=' + canvasHeight+' style="border:0px solid #ccc;" >	Your browser does not support the HTML5 canvas.</canvas>';
         document.getElementById('canvasdiv').innerHTML = canvas_str;
         var c=document.getElementById("cc");
         hb=c.getContext("2d");
         hb.clearRect(0,0, canvasWidth, canvasHeight);//与cover大小一致
-        // GET REQUEST
-        $("#getALlBooks").click(function(event) {
-            event.preventDefault();
-            getWordsAndTags();
-        });
-    });
+        getWordsAndTags();
+        
+        <!--右键弹出修改词性菜单-->
+		document.getElementById('cmenu').addEventListener("contextmenu", function(e){
+			td = event.srcElement;
+			line = td.parentElement.rowIndex;
+			col = td.cellIndex;    
+			var cell_len = tt.rows.item(0).cells.length; 
+			
+			var x = event.pageX - $("#cc").offset().left;
+			var y = event.pageY - $("#cc").offset().top;
+			
+			for (var i=0; i<arcs.length; i++)
+			{
+				var tx = arcs[i].xtxt;
+				var ty = arcs[i].ytxt;      // 曲线中点坐标
+				
+				if((x-13)<=tx && (y-9)<=ty && (y+10) >=ty &&(x+13)>=tx ) {
+					chooseIndex = i;
+					if (segcheck == false){
+						arcs[i].choose = true;
+						drawcurve();
+						menu.display(event);
+						break;
+					}
+				}
+			}
+		}); 
+		
+	    <!-- 右键弹出修改分词菜单-->
 
-    $(".actions").click(function(){
-        var name=$(this).attr("name");
-        if(name=="change") {
-            $(this).text("分词修改完毕");
-            $(this).value("change_over");
-        }
-
+	    $('#change').click(function(){
+	    	console.log("!!!!!!!!");
+	    	if (segcheck == true) {
+	    		return;
+	    	}
+	    	segcheck = true;
+			wordlist="<tr>";
+			taglist ='<tr>';
+			var cell_len = tt.rows.item(0).cells.length;
+			
+			for (var i = 0; i < cell_len; i++){
+				var w = tt.rows.item(0).cells.item(i).innerText;
+				var tag = tt.rows.item(1).cells.item(i).innerText;
+				wordlist += '<td width= ' + widthArr[i] + '  ><textarea id="cell' + i + '" value="' + w + '" style="width:100%;height:100%;font-size:17px;padding:0">' + w + '</textarea></td>';
+			    taglist  += '<td width= ' + widthArr[i] + '  "style="font-size:17px">' + tag + '</td>';
+			}
+			wordlist += '</tr>';
+			taglist  += '</tr>';
+			tt.innerHTML = wordlist + taglist;
+	    }) 
     });
 </script>
 </html>
