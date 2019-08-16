@@ -1,0 +1,37 @@
+<html>
+<head>
+    <META
+            http-equiv="content-type"   content="text/html;   charset=shift_jis">
+    <title>TEST</title>
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+
+    <style type="text/css">
+        #ruler {
+            visibility: hidden;
+            white-space: nowrap;
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body bgcolor=
+              "#ffffff">
+<form method="post" action="" name="FMlog">
+    <input name="txt1" type="text" />
+    <input name="btn1"   type="button"   onclick="SC()"
+           value="click   me"/>
+    <span id="ruler">test</span>
+</form>
+</body>
+<script type="text/javascript">
+    String.prototype.visualLength = function()
+    {
+        var ruler = $("#ruler");
+        ruler.text(this);
+        return ruler[0].offsetWidth;
+    };
+    var text = "test";
+    var len = text.visualLength();
+    console.log(len);
+
+</script>
+</html>
